@@ -1,18 +1,46 @@
 import React from "react";
 import HomePage from "./pages/homepage/HomePage";
 import Shop from "./pages/shop/Shop";
+import Header from "./components/header/Header";
+import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/SignInAndSignUpPage";
 import { Route, Switch } from "react-router-dom";
+import { auth } from "./firebase/firebase.utils";
 import "./App.css";
 
-function App() {
-	return (
-		<React.Fragment>
-			<Switch>
-				<Route exact path='/' component={HomePage} />
-				<Route path='/shop' component={Shop} />
-			</Switch>
-		</React.Fragment>
-	);
+class App extends React.Component {
+	constructor() {
+		super();
+
+		this.state = {
+			currentUser: null
+		};
+	}
+
+	unsubscribeFromAuth = null;
+
+	componentDidMount() {
+		this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
+			this.setState({ currentUser: user });
+			console.log(user);
+		});
+	}
+
+	componentWillUnmount() {
+		this.unsubscribeFromAuth();
+	}
+
+	render() {
+		return (
+			<React.Fragment>
+				<Header currentUser={this.state.currentUser} />
+				<Switch>
+					<Route exact path='/' component={HomePage} />
+					<Route path='/shop' component={Shop} />
+					<Route path='/signin' component={SignInAndSignUpPage} />
+				</Switch>
+			</React.Fragment>
+		);
+	}
 }
 
 export default App;
