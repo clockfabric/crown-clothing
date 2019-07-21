@@ -33,6 +33,7 @@ class App extends React.Component {
 	}
 
 	render() {
+		const { currentUser } = this.props;
 		return (
 			<React.Fragment>
 				<Header />
@@ -43,7 +44,7 @@ class App extends React.Component {
 						exact
 						path='/signin'
 						render={() =>
-							this.props.currentUser ? (
+							currentUser ? (
 								<Redirect to='/' />
 							) : (
 								<SignInAndSignUpPage />
